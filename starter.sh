@@ -64,6 +64,9 @@ function printUsage()
       <3-thirdVariableName>      - provide the usage explination of the third postional paramter
 EOF
 }
+#example of how to extract the exact word and portion of that word
+#from some command ( 'go version' in this case ) and save it to a variable
+actualGoVersion=$(go version | awk '{print $3}' | sed s/go//)
 
 #this validates all input arguments. as written, assumes three dash options
 #followed by several positional parameters.
