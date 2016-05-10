@@ -27,15 +27,46 @@ EOF
 
 function printBanner{
    cat <<EOF
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  $1
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 EOF
 }
+#a function to uniformly check for erros in commands as they are executed
+# processes up to five args for each command
+function safeExecute(){
+   $1 ${2:-``} ${3:-``} ${4:-``} ${5:-``} ${6:-``} 
+   if [ $? -ne 0 ]
+   then
+      printError "$1 ${2:-``} ${3:-``} ${4:-``} ${5:-``} ${6:-``} "
+      exit 1
+   fi
+}
+
+function infoExecute(){
+   $1 ${2:-``} ${3:-``} ${4:-``} ${5:-``} ${6:-``} 
+   if [ $? -ne 0 ]
+   then
+      printInfo "$1 ${2:-``} ${3:-``} ${4:-``} ${5:-``} ${6:-``} "
+   fi
+}
+
+actualGoVersion=$(go version | awk '{print $3}' | sed s/go//)
+
+#this is how to return a value from a function. Note that __r3sulTvar
+# will be "eval " as a global variable so it cannot match any other 
+# likely variableName. Hence the offucation. 
+function myfunc()
+{
+    local  __r3sulTvar=$1
+    local  myresult='some value'
+    eval $__r3sulTvar="'$myresult'"
+}
+
+myfunc result
+echo $result
 
 #traps on the EXIT sudo signal and calls safeExit for cleanup
 trap safeExit EXIT 
@@ -49,6 +80,15 @@ EXIT_MSG="Great success."
 function safeExit() {
    echo "${EXIT_MSG}"
 }
+
+# declare an array called array and define 3 vales
+#iterate over the array. 
+array=( one two three )
+for i in "${array[@]}"
+do
+	echo $i
+done
+
 #print both optargs and positional args
 function printUsage()
 {
