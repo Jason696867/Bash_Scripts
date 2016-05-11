@@ -127,12 +127,12 @@ function main()
 	processInputArguments $@
 
 	printConsoleInfo "Deleting subtree $SUBTREE_PATH"
-	safeExecute rm -rf $SUBTREE_PATH
+	safeExecute rm -r $SUBTREE_PATH
 	safeExecute git add -A 
 	safeExecute git commit -m `"Removed subtree $SUBTREE_PATH"`
 	printConsoleInfo "Adding submodule $SUBTREE_PATH"
-	safeExecute git submodule add $SUBTREE_URL $SUBTREE_PATH -b $BRANCH_NAME
-	safeExecute git config -f .gitmodules submodule.$SUBTREE_PATH.branch $BRANCH_NAME
+	safeExecute git submodule add "$SUBTREE_URL" "$SUBTREE_PATH" -b "$BRANCH_NAME"
+	safeExecute git config -f .gitmodules submodule."$SUBTREE_PATH".branch "$BRANCH_NAME"
 	safeExecute git submodule update --remote
 	safeExecute git add -A 
 	safeExecute git commit -m "Added submodule $SUBTREE_PATH and set it up to track branch $BRANCH_NAME"
